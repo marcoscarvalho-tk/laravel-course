@@ -16,3 +16,19 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/sobre_nos', function () {
+    return 'Sobre nós';
+});
+Route::get('/contato', function () {
+    return 'Contato';
+});
+
+/* principais verbos http para controle de requisiçõe de servidores
+Route::get($uri, $callback)
+get
+post
+put
+patch
+delete
+options
+*/
