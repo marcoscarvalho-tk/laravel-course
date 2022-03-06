@@ -12,16 +12,18 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+/*
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/sobre_nos', function () {
-    return 'Sobre nós';
-});
-Route::get('/contato', function () {
-    return 'Contato';
-});
+*/
+/**Aqui é informado a URI e @ função de callback ou a string do controlador
+ * comando para criação de um controlador: php artisan make:controller <NomeDoControlador>
+ * controladores estão em: app>Controllers 
+ */
+Route::get('/', 'PrincipalController@principal'); 
+Route::get('/sobre-nos', 'SobreNosController@sobreNos');
+Route::get('/contato', 'ContatoController@contato');
 
 /* principais verbos http para controle de requisiçõe de servidores
 Route::get($uri, $callback)
