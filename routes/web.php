@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 /**##Comandos##
  * php artisan route:list => retorna  uma lista com todas as rotas
-
+ * php artisan serve => starta o servidor local
 /*
 Route::get('/', function () {
     return view('welcome');
@@ -23,17 +23,58 @@ Route::get('/', function () {
 /**Aqui é informado a URI e @ função de callback ou a string do controlador
  * comando para criação de um controlador: php artisan make:controller <NomeDoControlador>
  * controladores estão em: app>Controllers 
+ * o método name() tem a função de substituir os path absoluto das rotas
+ * Ex: /contato => site.contato. 
+ * Porém a sintax deverá ser incluida, a função route() dentro de chaves duplas 
+ * Ex:{{'route(site.contato)')}} Vide exemplo em contato.blade.php
  */
-Route::get('/', 'PrincipalController@principal'); 
-Route::get('/sobre-nos', 'SobreNosController@sobreNos');
-Route::get('/contato', 'ContatoController@contato');
-Route::get('/login', function(){return 'login';});
-Route::get('/clientes', function(){return 'Cliente';});
-Route::get('/fornecedores', function(){return 'Fornecedores';});
-Route::get('/produtos', function(){return 'Produtos';});
+Route::get('/', 'PrincipalController@principal')->name('site.index'); 
+Route::get('/sobre-nos', 'SobreNosController@sobreNos')->name('site.sobrenos');
+Route::get('/contato', 'ContatoController@contato')->name('site.contato');
+Route::get('/login', function(){return 'login';})->name('site.login');
 
-/**Este tipo de Route, não conflita com a anterior
- * devido estar recebendo parametros {nome, categoria, mensagem, etc}
+/**O objeto Route::prefix realiza um agrupamento de rotas
+ * dentro de uma função de callback do método group()abaixo
+ * em um novo diretório (ex: /app)
+  */
+Route::prefix('/app')->group(function(){
+    Route::get('/clientes', function(){return 'Cliente';})->name('app.clientes');
+    Route::get('/fornecedores', function(){return 'Fornecedores';})->name('app.fornecedores');
+    Route::get('/produtos', function(){return 'Produtos';})->name('app.login');
+
+});
+
+/**Rota de redirecionamento 
+ * O método redirect() realiza um redirecionamento de rotas
+ * abaixo temos um exemplo:
+ * caso seja acessada a /rota2,
+ * automaticamente será redirecionado para /rota1 
+ */
+Route::get('/rota1', function(){
+  echo 'Rota 1';
+})->name('site.rota1');
+
+Route::get('/rota2', function(){
+  return redirect()->route('site.rota1');
+})->name('site.rota2');
+
+/*Outro exemplo de redirect 
+Route::redirect('/rota2','rota1');
+*/
+
+/** Rota de contingência 
+ * O método fallback() realiza um procedimento predefinido caso o usuário tente acessar uma rota inexistente
+ * no caso abaixo, foi predeterminado uma opção de retorno à página principal com o emprego de um link
+ * caso não seja adotada a função de fallback() o framework exibirá um erro de página não encontrada (404) padrão.
+  */
+Route::fallback(function(){
+  echo 'A rota acessada não existe. <a href="'.route('site.index').'">clique aqui</a> para retornar a página principal';
+});
+
+
+
+/**Este tipo de Route, não conflita com a rota /contato apenas
+ * devido estar recebendo parametros {nome, categoria, mensagem, etc} na URI
  * o próprio framework consegue diferenciá-la
  * para tornar o parâmetro opcional adicione um ponto exclamação (?) após o parâmetro
  * recomenda-se atribuir um valor padrão à variavel do parâmetro opcional.
