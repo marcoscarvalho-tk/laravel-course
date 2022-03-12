@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 /**##Comandos##
+ * php artisan make:controller ExemploController => cria um novo controlador o diretório:
+ * app > Http > Controllers
  * php artisan route:list => retorna  uma lista com todas as rotas
  * php artisan serve => starta o servidor local
 /*
@@ -49,7 +51,7 @@ Route::prefix('/app')->group(function(){
  * abaixo temos um exemplo:
  * caso seja acessada a /rota2,
  * automaticamente será redirecionado para /rota1 
- */
+ 
 Route::get('/rota1', function(){
   echo 'Rota 1';
 })->name('site.rota1');
@@ -57,10 +59,11 @@ Route::get('/rota1', function(){
 Route::get('/rota2', function(){
   return redirect()->route('site.rota1');
 })->name('site.rota2');
-
+*/
 /*Outro exemplo de redirect 
 Route::redirect('/rota2','rota1');
 */
+
 
 /** Rota de contingência 
  * O método fallback() realiza um procedimento predefinido caso o usuário tente acessar uma rota inexistente
@@ -71,6 +74,9 @@ Route::fallback(function(){
   echo 'A rota acessada não existe. <a href="'.route('site.index').'">clique aqui</a> para retornar a página principal';
 });
 
+/** Encaminhamento de parâmetros da Rota para controladores 
+*/
+Route::get('/teste/{p1}/{p2}', 'TesteController@teste')->name('teste');
 
 
 /**Este tipo de Route, não conflita com a rota /contato apenas
